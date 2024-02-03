@@ -53,7 +53,7 @@ class InstitucionController extends Controller
 
     public function update(Institucion $institucion, Request $request)
     {
-
+        $request->validate($this->validacion, $this->messages);
         DB::beginTransaction();
         try {
             $institucion->update(array_map("mb_strtoupper", $request->except("foto_director", "foto_subdirector", "logo", "organigrama", "ubicacion_google")));

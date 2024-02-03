@@ -2,7 +2,8 @@
     --principal: #2a9af3;
     --principal_hover: #40a5f7;
     --principal_transparent: #2a99f3c2;
-    --secundario: #464444;
+    --secundario: #f1f1f1;
+    --fondo_app: #f2f2f2;
     --correcto: #d2e7c9;
     --transparente: #000000bd;
     --progress: #4b5563;
@@ -32,7 +33,7 @@ iframe {
 }
 
 .v-main {
-    background-color: #f2f2f2;
+    background-color: var(--fondo_app);
 }
 
 .v-footer {

@@ -36,6 +36,8 @@ Route::get('/', function () {
     return Inertia::render('Auth/Login');
 });
 
+Route::get("institucions/getInstitucion", [InstitucionController::class, 'getInstitucion'])->name("institucions.getInstitucion");
+
 Route::middleware('auth')->group(function () {
     // BORRAR
     Route::get('/vuetify', function () {
@@ -68,7 +70,6 @@ Route::middleware('auth')->group(function () {
     );
 
     // INSTITUCION
-    Route::get("institucions/getInstitucion", [InstitucionController::class, 'getInstitucion'])->name("institucions.getInstitucion");
     Route::resource("institucions", InstitucionController::class)->only(
         ["index", "show", "update"]
     );

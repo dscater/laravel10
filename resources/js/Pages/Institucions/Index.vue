@@ -45,11 +45,15 @@ institucion.value["_method"] = "put";
 let form = useForm(institucion.value);
 
 const enviaFormulario = () => {
-    form.post(route("institucions.update", institucion.value.id));
-    setTimeout(() => {
-        obtnerInstitucion();
-        cambiaVentana(0);
-    }, 300);
+    form.post(route("institucions.update", institucion.value.id), {
+        onSuccess: () => {
+            setTimeout(() => {
+                obtnerInstitucion();
+                cambiaVentana(0);
+            }, 300);
+        },
+        onError: (err) => {},
+    });
 };
 
 const { getInstitucion } = useInstitucion();
@@ -99,7 +103,10 @@ function limpiaRefs() {
                     prepend-icon="mdi-close"
                     class="mr-2"
                     v-if="window == 1"
-                    @click="cambiaVentana(0)"
+                    @click="
+                        cambiaVentana(0);
+                        obtnerInstitucion();
+                    "
                 >
                     Cancelar</v-btn
                 >
@@ -488,6 +495,26 @@ function limpiaRefs() {
                                                         xl="4"
                                                     >
                                                         <v-text-field
+                                                            :hide-details="
+                                                                form.errors
+                                                                    ?.nombre
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors
+                                                                    ?.nombre
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors
+                                                                    ?.nombre
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.nombre
+                                                                    : ''
+                                                            "
                                                             density="compact"
                                                             variant="outlined"
                                                             color="blue"
@@ -505,6 +532,26 @@ function limpiaRefs() {
                                                         xl="4"
                                                     >
                                                         <v-text-field
+                                                            :hide-details="
+                                                                form.errors
+                                                                    ?.nombre_sistema
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors
+                                                                    ?.nombre_sistema
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors
+                                                                    ?.nombre_sistema
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.nombre_sistema
+                                                                    : ''
+                                                            "
                                                             density="compact"
                                                             variant="outlined"
                                                             color="blue"
@@ -522,6 +569,23 @@ function limpiaRefs() {
                                                         xl="4"
                                                     >
                                                         <v-text-field
+                                                            :hide-details="
+                                                                form.errors?.nit
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors?.nit
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors?.nit
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.nit
+                                                                    : ''
+                                                            "
                                                             density="compact"
                                                             variant="outlined"
                                                             color="blue"
@@ -537,6 +601,26 @@ function limpiaRefs() {
                                                         xl="4"
                                                     >
                                                         <v-text-field
+                                                            :hide-details="
+                                                                form.errors
+                                                                    ?.nombre_director
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors
+                                                                    ?.nombre_director
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors
+                                                                    ?.nombre_director
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.nombre_director
+                                                                    : ''
+                                                            "
                                                             density="compact"
                                                             variant="outlined"
                                                             color="blue"
@@ -554,6 +638,26 @@ function limpiaRefs() {
                                                         xl="4"
                                                     >
                                                         <v-file-input
+                                                            :hide-details="
+                                                                form.errors
+                                                                    ?.foto_director
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors
+                                                                    ?.foto_director
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors
+                                                                    ?.foto_director
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.foto_director
+                                                                    : ''
+                                                            "
                                                             density="compact"
                                                             variant="outlined"
                                                             accept="image/png, image/jpeg, image/bmp, image/webp"
@@ -576,6 +680,26 @@ function limpiaRefs() {
                                                         xl="4"
                                                     >
                                                         <v-text-field
+                                                            :hide-details="
+                                                                form.errors
+                                                                    ?.nombre_subdirector
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors
+                                                                    ?.nombre_subdirector
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors
+                                                                    ?.nombre_subdirector
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.nombre_subdirector
+                                                                    : ''
+                                                            "
                                                             density="compact"
                                                             variant="outlined"
                                                             color="blue"
@@ -593,6 +717,26 @@ function limpiaRefs() {
                                                         xl="4"
                                                     >
                                                         <v-file-input
+                                                            :hide-details="
+                                                                form.errors
+                                                                    ?.foto_subdirector
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors
+                                                                    ?.foto_subdirector
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors
+                                                                    ?.foto_subdirector
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.foto_subdirector
+                                                                    : ''
+                                                            "
                                                             density="compact"
                                                             variant="outlined"
                                                             accept="image/png, image/jpeg, image/bmp, image/webp"
@@ -615,6 +759,26 @@ function limpiaRefs() {
                                                         xl="4"
                                                     >
                                                         <v-text-field
+                                                            :hide-details="
+                                                                form.errors
+                                                                    ?.fono1
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors
+                                                                    ?.fono1
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors
+                                                                    ?.fono1
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.fono1
+                                                                    : ''
+                                                            "
                                                             density="compact"
                                                             variant="outlined"
                                                             color="blue"
@@ -630,6 +794,26 @@ function limpiaRefs() {
                                                         xl="4"
                                                     >
                                                         <v-text-field
+                                                            :hide-details="
+                                                                form.errors
+                                                                    ?.fono2
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors
+                                                                    ?.fono2
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors
+                                                                    ?.fono2
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.fono2
+                                                                    : ''
+                                                            "
                                                             density="compact"
                                                             variant="outlined"
                                                             color="blue"
@@ -645,6 +829,26 @@ function limpiaRefs() {
                                                         xl="4"
                                                     >
                                                         <v-text-field
+                                                            :hide-details="
+                                                                form.errors
+                                                                    ?.correo1
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors
+                                                                    ?.correo1
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors
+                                                                    ?.correo1
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.correo1
+                                                                    : ''
+                                                            "
                                                             density="compact"
                                                             variant="outlined"
                                                             color="blue"
@@ -662,6 +866,26 @@ function limpiaRefs() {
                                                         xl="4"
                                                     >
                                                         <v-text-field
+                                                            :hide-details="
+                                                                form.errors
+                                                                    ?.correo2
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors
+                                                                    ?.correo2
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors
+                                                                    ?.correo2
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.correo2
+                                                                    : ''
+                                                            "
                                                             density="compact"
                                                             variant="outlined"
                                                             color="blue"
@@ -679,6 +903,26 @@ function limpiaRefs() {
                                                         xl="4"
                                                     >
                                                         <v-text-field
+                                                            :hide-details="
+                                                                form.errors
+                                                                    ?.facebook
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors
+                                                                    ?.facebook
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors
+                                                                    ?.facebook
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.facebook
+                                                                    : ''
+                                                            "
                                                             density="compact"
                                                             variant="outlined"
                                                             color="blue"
@@ -696,6 +940,26 @@ function limpiaRefs() {
                                                         xl="4"
                                                     >
                                                         <v-text-field
+                                                            :hide-details="
+                                                                form.errors
+                                                                    ?.youtube
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors
+                                                                    ?.youtube
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors
+                                                                    ?.youtube
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.youtube
+                                                                    : ''
+                                                            "
                                                             density="compact"
                                                             variant="outlined"
                                                             color="blue"
@@ -713,6 +977,26 @@ function limpiaRefs() {
                                                         xl="4"
                                                     >
                                                         <v-text-field
+                                                            :hide-details="
+                                                                form.errors
+                                                                    ?.twitter
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors
+                                                                    ?.twitter
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors
+                                                                    ?.twitter
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.twitter
+                                                                    : ''
+                                                            "
                                                             density="compact"
                                                             variant="outlined"
                                                             color="blue"
@@ -730,6 +1014,23 @@ function limpiaRefs() {
                                                         xl="4"
                                                     >
                                                         <v-text-field
+                                                            :hide-details="
+                                                                form.errors?.dir
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors?.dir
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors?.dir
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.dir
+                                                                    : ''
+                                                            "
                                                             density="compact"
                                                             variant="outlined"
                                                             color="blue"
@@ -745,6 +1046,26 @@ function limpiaRefs() {
                                                         xl="4"
                                                     >
                                                         <v-file-input
+                                                            :hide-details="
+                                                                form.errors
+                                                                    ?.logo
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors
+                                                                    ?.logo
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors
+                                                                    ?.logo
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.logo
+                                                                    : ''
+                                                            "
                                                             density="compact"
                                                             variant="outlined"
                                                             accept="image/png, image/jpeg, image/bmp, image/webp"
@@ -767,6 +1088,26 @@ function limpiaRefs() {
                                                         xl="4"
                                                     >
                                                         <v-file-input
+                                                            :hide-details="
+                                                                form.errors
+                                                                    ?.organigrama
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors
+                                                                    ?.organigrama
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors
+                                                                    ?.organigrama
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.organigrama
+                                                                    : ''
+                                                            "
                                                             density="compact"
                                                             variant="outlined"
                                                             accept="image/png, image/jpeg, image/bmp, image/webp"
@@ -786,6 +1127,26 @@ function limpiaRefs() {
                                                 <v-row>
                                                     <v-col cols="12">
                                                         <v-textarea
+                                                            :hide-details="
+                                                                form.errors
+                                                                    ?.historia
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors
+                                                                    ?.historia
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors
+                                                                    ?.historia
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.historia
+                                                                    : ''
+                                                            "
                                                             variant="outlined"
                                                             label="Historia"
                                                             rows="1"
@@ -797,6 +1158,26 @@ function limpiaRefs() {
                                                     </v-col>
                                                     <v-col cols="12">
                                                         <v-textarea
+                                                            :hide-details="
+                                                                form.errors
+                                                                    ?.mision
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors
+                                                                    ?.mision
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors
+                                                                    ?.mision
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.mision
+                                                                    : ''
+                                                            "
                                                             variant="outlined"
                                                             label="Misión"
                                                             rows="1"
@@ -808,6 +1189,26 @@ function limpiaRefs() {
                                                     </v-col>
                                                     <v-col cols="12">
                                                         <v-textarea
+                                                            :hide-details="
+                                                                form.errors
+                                                                    ?.objetivo
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors
+                                                                    ?.objetivo
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors
+                                                                    ?.objetivo
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.objetivo
+                                                                    : ''
+                                                            "
                                                             variant="outlined"
                                                             label="Objetivo General"
                                                             rows="1"
@@ -819,6 +1220,26 @@ function limpiaRefs() {
                                                     </v-col>
                                                     <v-col cols="12">
                                                         <v-textarea
+                                                            :hide-details="
+                                                                form.errors
+                                                                    ?.ubicacion_google
+                                                                    ? false
+                                                                    : true
+                                                            "
+                                                            :error="
+                                                                form.errors
+                                                                    ?.ubicacion_google
+                                                                    ? true
+                                                                    : false
+                                                            "
+                                                            :error-messages="
+                                                                form.errors
+                                                                    ?.ubicacion_google
+                                                                    ? form
+                                                                          .errors
+                                                                          ?.ubicacion_google
+                                                                    : ''
+                                                            "
                                                             variant="outlined"
                                                             label="Ubicación Google Maps"
                                                             rows="1"
