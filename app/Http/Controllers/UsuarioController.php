@@ -87,7 +87,6 @@ class UsuarioController extends Controller
             $nuevo_usuario = User::create(array_map('mb_strtoupper', $request->except('foto')));
             $nuevo_usuario->password = Hash::make($request->ci);
             $nuevo_usuario->save();
-            $nuevo_usuario->foto = 'default.png';
             if ($request->hasFile('foto')) {
                 $file = $request->foto;
                 $nom_foto = time() . '_' . $nuevo_usuario->usuario . '.' . $file->getClientOriginalExtension();

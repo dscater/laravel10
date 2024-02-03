@@ -56,8 +56,8 @@ class InstitucionController extends Controller
 
         DB::beginTransaction();
         try {
-            $institucion->update(array_map("mb_strtoupper", $request->except("foto_director", "foto_subdirector", "logo", "organigrama")));
-
+            $institucion->update(array_map("mb_strtoupper", $request->except("foto_director", "foto_subdirector", "logo", "organigrama", "ubicacion_google")));
+            $institucion->ubicacion_google = $request->ubicacion_google;
             if ($request->hasFile('foto_director')) {
                 $antiguo = $institucion->foto_director;
                 if ($antiguo && $antiguo != 'default.png') {

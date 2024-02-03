@@ -111,7 +111,12 @@ const scrollActive = () => {
         </v-sheet>
 
         <v-list class="mt-1 px-2" v-model:opened="menu_open">
-            <v-list-item class="text-caption">INICIO</v-list-item>
+            <v-list-item class="text-caption">
+                <span v-if="rail && !mobile" class="text-center d-block"
+                    ><v-icon>mdi-dots-horizontal</v-icon></span
+                >
+                <span v-else>INICIO</span></v-list-item
+            >
             <v-list-item
                 prepend-icon="mdi-home-outline"
                 :class="[route_current == 'inicio' ? 'active' : '']"
@@ -130,7 +135,11 @@ const scrollActive = () => {
             <v-list-item
                 class="text-caption"
                 v-if="oUser.permisos.includes('usuarios.index')"
-                >ADMINISTRACIÓN</v-list-item
+            >
+                <span v-if="rail && !mobile" class="text-center d-block"
+                    ><v-icon>mdi-dots-horizontal</v-icon></span
+                >
+                <span v-else>ADMINISTRACIÓN</span></v-list-item
             >
 
             <v-list-item
@@ -150,7 +159,12 @@ const scrollActive = () => {
                 >
             </v-list-item>
 
-            <v-list-item class="text-caption">MULTINIVEL</v-list-item>
+            <v-list-item class="text-caption"
+                ><span v-if="rail && !mobile" class="text-center d-block"
+                    ><v-icon>mdi-dots-horizontal</v-icon></span
+                >
+                <span v-else>MULTINIVEL</span></v-list-item
+            >
             <!-- SUBGROUP -->
             <v-list-group value="Multinivel1">
                 <template v-slot:activator="{ props }">
@@ -164,7 +178,15 @@ const scrollActive = () => {
                                 ? 'active'
                                 : '',
                         ]"
-                    ></v-list-item>
+                    >
+                        <v-tooltip
+                            v-if="rail && !mobile"
+                            color="white"
+                            activator="parent"
+                            location="end"
+                            >Multinivel 1</v-tooltip
+                        ></v-list-item
+                    >
                 </template>
                 <v-list-item
                     prepend-icon="mdi-chevron-right"
@@ -172,14 +194,35 @@ const scrollActive = () => {
                     :class="[route_current == 'vuetify' ? 'active' : '']"
                     @click="cambiarUrl(route('vuetify'))"
                     link
-                ></v-list-item>
+                >
+                    <v-tooltip
+                        v-if="rail && !mobile"
+                        color="white"
+                        activator="parent"
+                        location="end"
+                        >Vuetify</v-tooltip
+                    ></v-list-item
+                >
                 <v-list-item
                     prepend-icon="mdi-chevron-right"
                     title="Vuetify 2"
                     link
-                ></v-list-item>
+                >
+                    <v-tooltip
+                        v-if="rail && !mobile"
+                        color="white"
+                        activator="parent"
+                        location="end"
+                        >Vuetify 2</v-tooltip
+                    ></v-list-item
+                >
             </v-list-group>
-            <v-list-item class="text-caption">OTROS</v-list-item>
+            <v-list-item class="text-caption"
+                ><span v-if="rail && !mobile" class="text-center d-block"
+                    ><v-icon>mdi-dots-horizontal</v-icon></span
+                >
+                <span v-else>OTROS</span></v-list-item
+            >
             <v-list-item
                 v-if="oUser.permisos.includes('institucions.index')"
                 prepend-icon="mdi-cog-outline"

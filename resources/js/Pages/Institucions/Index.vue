@@ -85,7 +85,7 @@ function limpiaRefs() {
 <template>
     <v-container>
         <BreadBrums :breadbrums="breadbrums"></BreadBrums>
-        <v-row>
+        <v-row class="mt-0">
             <v-col cols="12" class="d-flex justify-end">
                 <v-btn
                     prepend-icon="mdi-pencil"
@@ -113,17 +113,19 @@ function limpiaRefs() {
                 >
             </v-col>
         </v-row>
-        <v-row>
+        <v-row class="mt-0">
             <v-col cols="12">
                 <v-window v-model="window">
                     <v-window-item :key="0">
                         <v-row>
-                            <v-col cols="12" sm="4">
+                            <v-col cols="12" sm="12">
                                 <v-card>
                                     <v-card-text>
                                         <v-row>
                                             <v-col
                                                 cols="12"
+                                                sm="4"
+                                                md="2"
                                                 class="text-center"
                                             >
                                                 <v-img
@@ -145,75 +147,64 @@ function limpiaRefs() {
                                                     ></span>
                                                 </v-avatar>
                                                 <span
-                                                    class="text-h5 d-block mt-3"
+                                                    class="text-h6 d-block mt-3"
                                                     >{{
                                                         institucion.nombre
                                                     }}</span
                                                 >
+
+                                                {{ institucion.dir }}
                                             </v-col>
-                                        </v-row>
-                                        <v-row class="px-3">
-                                            <v-col cols="12">
+                                            <v-divider vertical></v-divider>
+                                            <v-col
+                                                cols="10"
+                                                sm="8"
+                                                md="10"
+                                                class="d-flex align-center"
+                                            >
                                                 <v-row>
+                                                    <v-col cols="12">
+                                                        <h4 class="text-center text-h6">INFORMACIÓN</h4>
+                                                    </v-col>
                                                     <v-col
                                                         cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="4"
-                                                        class="text-right"
-                                                        >Nombre Sistema:</v-col
+                                                        md="3"
+                                                        xl="3"
                                                     >
-                                                    <v-col
-                                                        cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="8"
-                                                        class="text-left"
-                                                        >{{
+                                                        <div
+                                                            class="text-caption font-weight-bold"
+                                                        >
+                                                            Nombre Sistema
+                                                        </div>
+                                                        {{
                                                             institucion.nombre_sistema
-                                                        }}</v-col
-                                                    >
-                                                </v-row>
-                                                <v-row>
+                                                        }}
+                                                    </v-col>
                                                     <v-col
                                                         cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="4"
-                                                        class="text-right"
-                                                        >Nit:</v-col
+                                                        md="3"
+                                                        xl="3"
                                                     >
+                                                        <div
+                                                            class="text-caption font-weight-bold"
+                                                        >
+                                                            Nit
+                                                        </div>
+                                                        {{ institucion.nit }}
+                                                    </v-col>
                                                     <v-col
                                                         cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="8"
-                                                        class="text-left"
-                                                        >{{
-                                                            institucion.nit
-                                                        }}</v-col
+                                                        md="3"
+                                                        xl="3"
                                                     >
-                                                </v-row>
-                                                <v-row>
-                                                    <v-col
-                                                        cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="4"
-                                                        class="text-right d-flex justify-end align-center"
-                                                        >Director:</v-col
-                                                    >
-                                                    <v-col
-                                                        cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="8"
-                                                        class="text-left d-flex align-center"
-                                                    >
+                                                        <div
+                                                            class="text-caption font-weight-bold"
+                                                        >
+                                                            Director
+                                                        </div>
                                                         {{
                                                             institucion.nombre_director
-                                                        }}
-                                                        <v-avatar
+                                                        }}<v-avatar
                                                             class="ml-2"
                                                             :color="
                                                                 institucion.url_foto_director
@@ -239,25 +230,18 @@ function limpiaRefs() {
                                                                     institucion.iniciales_director
                                                                 }}
                                                             </span>
-                                                        </v-avatar></v-col
-                                                    >
-                                                </v-row>
-                                                <v-row>
+                                                        </v-avatar>
+                                                    </v-col>
                                                     <v-col
                                                         cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="4"
-                                                        class="text-right d-flex justify-end align-center"
-                                                        >Subdirector:</v-col
+                                                        md="3"
+                                                        xl="3"
                                                     >
-                                                    <v-col
-                                                        cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="8"
-                                                        class="text-left d-flex align-center"
-                                                    >
+                                                        <div
+                                                            class="text-caption font-weight-bold"
+                                                        >
+                                                            Subdirector
+                                                        </div>
                                                         {{
                                                             institucion.nombre_subdirector
                                                         }}
@@ -290,256 +274,188 @@ function limpiaRefs() {
                                                                     institucion.iniciales_subdirector
                                                                 }}
                                                             </span>
-                                                        </v-avatar></v-col
-                                                    >
-                                                </v-row>
-                                                <v-row>
+                                                        </v-avatar>
+                                                    </v-col>
                                                     <v-col
                                                         cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="4"
-                                                        class="text-right"
-                                                        >Teléfono 1:</v-col
+                                                        md="3"
+                                                        xl="3"
                                                     >
+                                                        <div
+                                                            class="text-caption font-weight-bold"
+                                                        >
+                                                            Teléfono 1
+                                                        </div>
+                                                        {{ institucion.fono1 }}
+                                                    </v-col>
                                                     <v-col
                                                         cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="8"
-                                                        class="text-left"
-                                                        >{{
-                                                            institucion.fono1
-                                                        }}</v-col
+                                                        md="3"
+                                                        xl="3"
                                                     >
-                                                </v-row>
-                                                <v-row>
+                                                        <div
+                                                            class="text-caption font-weight-bold"
+                                                        >
+                                                            Teléfono 2
+                                                        </div>
+                                                        {{ institucion.fono2 }}
+                                                    </v-col>
                                                     <v-col
                                                         cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="4"
-                                                        class="text-right"
-                                                        >Teléfono 2:</v-col
+                                                        md="3"
+                                                        xl="3"
                                                     >
-                                                    <v-col
-                                                        cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="8"
-                                                        class="text-left"
-                                                        >{{
-                                                            institucion.fono2
-                                                        }}</v-col
-                                                    >
-                                                </v-row>
-                                                <v-row>
-                                                    <v-col
-                                                        cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="4"
-                                                        class="text-right"
-                                                        >Correo 1:</v-col
-                                                    >
-                                                    <v-col
-                                                        cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="8"
-                                                        class="text-left"
-                                                        >{{
+                                                        <div
+                                                            class="text-caption font-weight-bold"
+                                                        >
+                                                            Correo 1
+                                                        </div>
+                                                        {{
                                                             institucion.correo1
-                                                        }}</v-col
-                                                    >
-                                                </v-row>
-                                                <v-row>
+                                                        }}
+                                                    </v-col>
                                                     <v-col
                                                         cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="4"
-                                                        class="text-right"
-                                                        >Correo 2:</v-col
+                                                        md="3"
+                                                        xl="3"
                                                     >
-                                                    <v-col
-                                                        cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="8"
-                                                        class="text-left"
-                                                        >{{
+                                                        <div
+                                                            class="text-caption font-weight-bold"
+                                                        >
+                                                            Correo 2
+                                                        </div>
+                                                        {{
                                                             institucion.correo2
-                                                        }}</v-col
-                                                    >
-                                                </v-row>
-                                                <v-row>
+                                                        }}
+                                                    </v-col>
                                                     <v-col
                                                         cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="4"
-                                                        class="text-right"
-                                                        >Facebook:</v-col
+                                                        md="3"
+                                                        xl="3"
                                                     >
-                                                    <v-col
-                                                        cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="8"
-                                                        class="text-left"
-                                                        >{{
+                                                        <div
+                                                            class="text-caption font-weight-bold"
+                                                        >
+                                                            Facebook
+                                                        </div>
+                                                        {{
                                                             institucion.facebook
-                                                        }}</v-col
-                                                    >
-                                                </v-row>
-                                                <v-row>
+                                                        }}
+                                                    </v-col>
                                                     <v-col
                                                         cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="4"
-                                                        class="text-right"
-                                                        >Youtube:</v-col
+                                                        md="3"
+                                                        xl="3"
                                                     >
-                                                    <v-col
-                                                        cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="8"
-                                                        class="text-left"
-                                                        >{{
+                                                        <div
+                                                            class="text-caption font-weight-bold"
+                                                        >
+                                                            Youtube
+                                                        </div>
+                                                        {{
                                                             institucion.youtube
-                                                        }}</v-col
-                                                    >
-                                                </v-row>
-                                                <v-row>
+                                                        }}
+                                                    </v-col>
                                                     <v-col
                                                         cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="4"
-                                                        class="text-right"
-                                                        >Twitter:</v-col
+                                                        md="3"
+                                                        xl="3"
                                                     >
-                                                    <v-col
-                                                        cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="8"
-                                                        class="text-left"
-                                                        >{{
+                                                        <div
+                                                            class="text-caption font-weight-bold"
+                                                        >
+                                                            Twitter
+                                                        </div>
+                                                        {{
                                                             institucion.twitter
-                                                        }}</v-col
-                                                    >
-                                                </v-row>
-                                                <v-row>
-                                                    <v-col
-                                                        cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="4"
-                                                        class="text-right"
-                                                        >Dirección:</v-col
-                                                    >
-                                                    <v-col
-                                                        cols="6"
-                                                        sm="6"
-                                                        md="6"
-                                                        xl="8"
-                                                        class="text-left"
-                                                        >{{
-                                                            institucion.dir
-                                                        }}</v-col
-                                                    >
+                                                        }}
+                                                    </v-col>
                                                 </v-row>
                                             </v-col>
                                         </v-row>
                                     </v-card-text>
                                 </v-card>
                             </v-col>
-                            <v-col cols="12" sm="8">
+                            <v-col cols="12" sm="6" md="4">
                                 <v-card>
+                                    <v-card-title
+                                        class="text-h6 text-center text-body-1 font-weight-black"
+                                        >HISTORIA</v-card-title
+                                    >
                                     <v-card-text>
-                                        <v-row>
-                                            <v-col
-                                                cols="12"
-                                                sm="6"
-                                                class="text-center"
-                                            >
-                                                <span class="text-h6"
-                                                    >ORGANIGRAMA</span
-                                                >
-                                                <br />
-                                                <v-img
-                                                    cover
-                                                    v-if="
-                                                        institucion.url_img_organigrama
-                                                    "
-                                                    :src="
-                                                        institucion.url_img_organigrama
-                                                    "
-                                                ></v-img>
-                                            </v-col>
-                                            <v-col
-                                                cols="12"
-                                                sm="6"
-                                                class="text-center"
-                                            >
-                                                <span class="text-h6"
-                                                    >HISTORIA</span
-                                                >
-                                                <br />
-                                                <p
-                                                    v-text="
-                                                        institucion.historia
-                                                    "
-                                                ></p>
-                                            </v-col>
-                                            <v-col
-                                                cols="12"
-                                                sm="6"
-                                                class="text-center"
-                                            >
-                                                <span class="text-h6"
-                                                    >MISIÓN</span
-                                                >
-                                                <br />
-                                                <p
-                                                    v-text="institucion.mision"
-                                                ></p>
-                                            </v-col>
-                                            <v-col
-                                                cols="12"
-                                                sm="6"
-                                                class="text-center"
-                                            >
-                                                <span class="text-h6"
-                                                    >OBJETIVO GENERAL</span
-                                                >
-                                                <br />
-                                                <p
-                                                    v-text="
-                                                        institucion.objetivo
-                                                    "
-                                                ></p>
-                                            </v-col>
-                                        </v-row>
+                                        <v-col cols="12" class="text-center">
+                                            <p
+                                                class="text-caption text-justify"
+                                                v-text="institucion.historia"
+                                            ></p>
+                                        </v-col>
                                     </v-card-text>
                                 </v-card>
                             </v-col>
-                            <v-col cols="12">
+                            <v-col cols="12" sm="6" md="4">
                                 <v-card>
+                                    <v-card-title
+                                        class="text-h6 text-center text-body-1 font-weight-black"
+                                        >MISIÓN</v-card-title
+                                    >
+                                    <v-card-text>
+                                        <v-col cols="12" class="text-center">
+                                            <p
+                                                class="text-caption text-justify"
+                                                v-text="institucion.mision"
+                                            ></p>
+                                        </v-col>
+                                    </v-card-text>
+                                </v-card>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-card>
+                                    <v-card-title
+                                        class="text-h6 text-center text-body-1 font-weight-black"
+                                        >OBJETIVO</v-card-title
+                                    >
+                                    <v-card-text>
+                                        <v-col cols="12" class="text-center">
+                                            <p
+                                                class="text-caption text-justify"
+                                                v-text="institucion.objetivo"
+                                            ></p>
+                                        </v-col>
+                                    </v-card-text>
+                                </v-card>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                                <v-card>
+                                    <v-card-title
+                                        class="text-center text-body-1 font-weight-black"
+                                        >ORGANIGRAMA</v-card-title
+                                    >
+                                    <v-card-text>
+                                        <v-col cols="12" class="text-center">
+                                            <v-img
+                                                cover
+                                                v-if="
+                                                    institucion.url_img_organigrama
+                                                "
+                                                :src="
+                                                    institucion.url_img_organigrama
+                                                "
+                                            ></v-img>
+                                        </v-col>
+                                    </v-card-text>
+                                </v-card>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                                <v-card>
+                                    <v-card-title
+                                        class="text-h6 text-center text-body-1 font-weight-black"
+                                        >UBICACIÓN GOOGLE MAPS</v-card-title
+                                    >
                                     <v-card-text>
                                         <v-row>
-                                            <v-col cols="12">
-                                                <span
-                                                    class="d-block text-h5 text-center"
-                                                    >Ubicación Google Maps</span
-                                                >
-                                            </v-col>
                                             <v-col
                                                 cols="12"
+                                                class="ubicacion"
                                                 v-html="
                                                     institucion.ubicacion_google
                                                 "
@@ -636,7 +552,7 @@ function limpiaRefs() {
                                                         <v-file-input
                                                             density="compact"
                                                             variant="outlined"
-                                                            accept="image/png, image/jpeg, image/bmp"
+                                                            accept="image/png, image/jpeg, image/bmp, image/webp"
                                                             placeholder="Foto Director"
                                                             prepend-icon="mdi-camera"
                                                             label="Foto Director"
@@ -675,7 +591,7 @@ function limpiaRefs() {
                                                         <v-file-input
                                                             density="compact"
                                                             variant="outlined"
-                                                            accept="image/png, image/jpeg, image/bmp"
+                                                            accept="image/png, image/jpeg, image/bmp, image/webp"
                                                             placeholder="Foto Subdirector"
                                                             prepend-icon="mdi-camera"
                                                             label="Foto Subdirector"
@@ -827,7 +743,7 @@ function limpiaRefs() {
                                                         <v-file-input
                                                             density="compact"
                                                             variant="outlined"
-                                                            accept="image/png, image/jpeg, image/bmp"
+                                                            accept="image/png, image/jpeg, image/bmp, image/webp"
                                                             placeholder="Logo"
                                                             prepend-icon="mdi-camera"
                                                             label="Logo"
@@ -849,7 +765,7 @@ function limpiaRefs() {
                                                         <v-file-input
                                                             density="compact"
                                                             variant="outlined"
-                                                            accept="image/png, image/jpeg, image/bmp"
+                                                            accept="image/png, image/jpeg, image/bmp, image/webp"
                                                             placeholder="Organigrama"
                                                             prepend-icon="mdi-camera"
                                                             label="Organigrama"
