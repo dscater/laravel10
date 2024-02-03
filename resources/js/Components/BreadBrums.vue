@@ -20,7 +20,7 @@ const props = defineProps({
 <template>
     <v-row>
         <v-col cols="12">
-            <v-breadcrumbs :items="breadbrums">
+            <v-breadcrumbs :items="breadbrums" class="pb-0">
                 <template v-slot:title="{ item }">
                     <span
                         @click="cambiarUrl(item.url)"

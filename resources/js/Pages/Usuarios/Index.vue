@@ -44,9 +44,16 @@ const headers = ref([
         sortable: true,
         key: "id",
     },
+    { title: "Usuario", key: "usuario", align: "start" },
     { title: "Nombre", key: "full_name", align: "start" },
+    { title: "C.I.", key: "full_ci", align: "start" },
+    { title: "Dirección", key: "dir", align: "start" },
+    { title: "Correo", key: "email", align: "start" },
+    { title: "Teléfono/Celular", key: "fono", align: "start" },
+    { title: "Foto", key: "foto", align: "start" },
     { title: "Tipo", key: "tipo", align: "start" },
-    { title: "Acción", key: "accion", align: "end" },
+    { title: "Acceso", key: "acceso", align: "start" },
+    { title: "Acción", key: "accion", align: "end", sortable: false },
 ]);
 
 const search = ref("");
@@ -286,7 +293,7 @@ onMounted(() => {});
 <template>
     <v-container>
         <BreadBrums :breadbrums="breadbrums"></BreadBrums>
-        <v-row>
+        <v-row class="mt-0">
             <v-col cols="12" class="d-flex justify-end">
                 <v-btn
                     color="blue"
@@ -297,24 +304,24 @@ onMounted(() => {});
                 >
             </v-col>
         </v-row>
-        <v-row>
+        <v-row class="mt-0">
             <v-col cols="12">
                 <v-card flat>
-                    <v-card-title> Usuarios </v-card-title>
-                    <v-card-text>
-                        <v-row>
-                            <v-col cols="12" md="4" offset-md="8">
+                    <v-card-title>
+                        <v-row class="bg-blue d-flex align-center pa-3">
+                            <v-col cols="12" sm="6" md="4"> Usuarios </v-col>
+                            <v-col cols="12" sm="6" md="4" offset-md="4">
                                 <v-text-field
                                     v-model="search"
                                     label="Buscar"
-                                    prepend-inner-icon="mdi-magnify"
-                                    single-line
-                                    variant="outlined"
-                                    color="blue"
+                                    append-inner-icon="mdi-magnify"
+                                    variant="underlined"
                                     hide-details
                                 ></v-text-field>
                             </v-col>
                         </v-row>
+                    </v-card-title>
+                    <v-card-text>
                         <v-data-table-server
                             v-model:items-per-page="itemsPerPage"
                             :headers="!mobile ? headers : []"
@@ -325,33 +332,84 @@ onMounted(() => {});
                             :search="search"
                             @update:options="loadItems"
                             height="auto"
+                            loading-text="Cargando..."
+                            page-text="{0} - {1} de {2}"
+                            items-per-page-text="Registros por página"
+                            :items-per-page-options="[
+                                { value: 10, title: '10' },
+                                { value: 25, title: '25' },
+                                { value: 50, title: '50' },
+                                { value: 100, title: '100' },
+                                {
+                                    value: -1,
+                                    title: 'Todos',
+                                },
+                            ]"
                         >
                             <template v-slot:item="{ item }">
                                 <tr v-if="!mobile">
                                     <td>{{ item.id }}</td>
+                                    <td>{{ item.usuario }}</td>
                                     <td class="text-xs-right">
                                         {{ item.full_name }}
+                                    </td>
+                                    <td>{{ item.full_ci }}</td>
+                                    <td>{{ item.dir }}</td>
+                                    <td>{{ item.email }}</td>
+                                    <td>{{ item.fono }}</td>
+                                    <td>
+                                        <v-avatar color="blue">
+                                            <v-img
+                                                v-if="item.url_foto"
+                                                :src="item.url_foto"
+                                                cover
+                                                :lazy-src="item.url_foto"
+                                            ></v-img>
+                                            <span v-else>{{
+                                                item.iniciales_nombre
+                                            }}</span>
+                                        </v-avatar>
                                     </td>
                                     <td class="text-xs-right">
                                         {{ item.tipo }}
                                     </td>
                                     <td>
+                                        <v-chip
+                                            :color="
+                                                item.acceso == 1
+                                                    ? 'success'
+                                                    : 'error'
+                                            "
+                                            :prepend-icon="
+                                                item.acceso == 1
+                                                    ? 'mdi-check'
+                                                    : 'mdi-lock'
+                                            "
+                                        >
+                                            <span
+                                                v-text="
+                                                    item.acceso == 1
+                                                        ? 'Habilitado'
+                                                        : 'Denegado'
+                                                "
+                                            ></span>
+                                        </v-chip>
+                                    </td>
+                                    <td class="text-right">
                                         <v-btn
                                             color="yellow"
-                                            size="sm"
+                                            size="small"
                                             class="pa-1 ma-1"
                                             @click="editarUsuario(item)"
-                                            ><v-icon>mdi-pencil</v-icon></v-btn
-                                        >
+                                            icon="mdi-pencil"
+                                        ></v-btn>
                                         <v-btn
                                             color="error"
-                                            size="sm"
+                                            size="small"
                                             class="pa-1 ma-1"
                                             @click="eliminarUsuario(item)"
-                                            ><v-icon
-                                                >mdi-trash-can</v-icon
-                                            ></v-btn
-                                        >
+                                            icon="mdi-trash-can"
+                                        ></v-btn>
                                     </td>
                                 </tr>
                                 <tr v-else>
@@ -382,30 +440,29 @@ onMounted(() => {});
                                                 {{ item.tipo }}
                                             </li>
                                         </ul>
-                                        <!-- <v-row>
-                                            <v-col cols="12">
+                                        <v-row>
+                                            <v-col
+                                                cols="12"
+                                                class="text-center pa-5"
+                                            >
                                                 <v-btn
                                                     color="yellow"
-                                                    size="sm"
+                                                    size="small"
                                                     class="pa-1 ma-1"
                                                     @click="editarUsuario(item)"
-                                                    ><v-icon
-                                                        >mdi-pencil</v-icon
-                                                    ></v-btn
-                                                >
+                                                    icon="mdi-pencil"
+                                                ></v-btn>
                                                 <v-btn
                                                     color="error"
-                                                    size="sm"
+                                                    size="small"
                                                     class="pa-1 ma-1"
                                                     @click="
                                                         eliminarUsuario(item)
                                                     "
-                                                    ><v-icon
-                                                        >mdi-trash-can</v-icon
-                                                    ></v-btn
-                                                >
+                                                    icon="mdi-trash-can"
+                                                ></v-btn>
                                             </v-col>
-                                        </v-row> -->
+                                        </v-row>
                                     </td>
                                 </tr>
                             </template>
@@ -647,17 +704,45 @@ onMounted(() => {});
                                         ></v-file-input>
                                     </v-col>
                                     <v-col cols="12" sm="6" md="4">
-                                        <v-switch
-                                            color="success"
-                                            true-value="1"
-                                            false-value="0"
-                                            v-model="form.acceso"
-                                            :label="`${
-                                                form.acceso == '1'
-                                                    ? 'Permitido'
-                                                    : 'Denegado'
-                                            }`"
-                                        ></v-switch>
+                                        <v-row>
+                                            <v-col cols="3"
+                                                ><span class="text-caption d-block pt-4">
+                                                    Acceso
+                                                </span></v-col
+                                            >
+                                            <v-col cols="9">
+                                                <v-switch
+                                                    color="success"
+                                                    true-value="1"
+                                                    false-value="0"
+                                                    v-model="form.acceso"
+                                                >
+                                                    <template v-slot:label>
+                                                        <v-chip
+                                                            :color="
+                                                                form.acceso == 1
+                                                                    ? 'success'
+                                                                    : 'error'
+                                                            "
+                                                            :prepend-icon="
+                                                                form.acceso == 1
+                                                                    ? 'mdi-check'
+                                                                    : 'mdi-lock'
+                                                            "
+                                                        >
+                                                            <span
+                                                                v-text="
+                                                                    form.acceso ==
+                                                                    1
+                                                                        ? 'Habilitado'
+                                                                        : 'Denegado'
+                                                                "
+                                                            ></span>
+                                                        </v-chip>
+                                                    </template>
+                                                </v-switch>
+                                            </v-col>
+                                        </v-row>
                                     </v-col>
                                 </v-row>
                             </form>
