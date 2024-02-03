@@ -7,7 +7,7 @@ import { onMounted } from "vue";
 import { useApp } from "@/composables/useApp";
 // componentes
 import BreadBrums from "@/Components/BreadBrums.vue";
-import { useInstitucion } from "@/composables/useInstitucion";
+import { useInstitucion } from "@/composables/institucion/useInstitucion";
 const breadbrums = [
     {
         title: "Inicio",

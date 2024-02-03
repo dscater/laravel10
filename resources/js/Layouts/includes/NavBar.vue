@@ -1,6 +1,6 @@
 <script setup>
 // Composables
-import { useInstitucion } from "@/composables/useInstitucion";
+import { useInstitucion } from "@/composables/institucion/useInstitucion";
 import { useMenu } from "@/composables/useMenu";
 import { useUser } from "@/composables/useUser";
 const { oUser } = useUser();

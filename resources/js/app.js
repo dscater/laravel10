@@ -33,6 +33,7 @@ const pinia = createPinia();
 // mis scripts
 import "./assets/css/config.css";
 import "./assets/css/datatables.css";
+import "./assets/css/form.css";
 
 // Default Layout
 import App from "@/Layouts/App.vue";

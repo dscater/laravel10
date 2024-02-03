@@ -1,4 +1,4 @@
-import { useInstitucionStore } from "@/stores/institucionStore";
+import { useInstitucionStore } from "@/stores/institucion/institucionStore";
 import axios from "axios";
 import { storeToRefs } from "pinia";
 import { onMounted } from "vue";

@@ -1,7 +1,7 @@
 <script setup>
-import { useApp } from "@/composables/useApp";
+import { useMenu } from "@/composables/useMenu";
 
-const { cambiarUrl } = useApp();
+const { cambiarUrl } = useMenu();
 
 const props = defineProps({
     breadbrums: {

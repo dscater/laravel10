@@ -26,17 +26,17 @@ class UsuarioController extends Controller
 
     public $mensajes = [
         "nombre.required" => "Este campo es obligatorio",
-        "nombre.min" => "Debes ingresar al menos :min caracter",
+        "nombre.min" => "Debes ingresar al menos :min caracteres",
         "paterno.required" => "Este campo es obligatorio",
-        "paterno.min" => "Debes ingresar al menos :min caracter",
+        "paterno.min" => "Debes ingresar al menos :min caracteres",
         "ci.required" => "Este campo es obligatorio",
         "ci.unique" => "Este C.I. ya fue registrado",
-        "ci.min" => "Debes ingresar al menos :min caracter",
+        "ci.min" => "Debes ingresar al menos :min caracteres",
         "ci_exp.required" => "Este campo es obligatorio",
         "dir.required" => "Este campo es obligatorio",
-        "dir.min" => "Debes ingresar al menos :min caracter",
+        "dir.min" => "Debes ingresar al menos :min caracteres",
         "fono.required" => "Este campo es obligatorio",
-        "fono.min" => "Debes ingresar al menos :min caracter",
+        "fono.min" => "Debes ingresar al menos :min caracteres",
         "tipo.required" => "Este campo es obligatorio",
     ];
 
@@ -55,7 +55,19 @@ class UsuarioController extends Controller
 
     public function paginado(Request $request)
     {
-        $usuarios = User::where("id", "!=", 1)->paginate(5);
+
+        $search = $request->search;
+
+        $usuarios = User::where("id", "!=", 1);
+
+        if (trim($search) != "") {
+            $usuarios->where("nombre", "LIKE", "%$search%");
+            $usuarios->orWhere("paterno", "LIKE", "%$search%");
+            $usuarios->orWhere("materno", "LIKE", "%$search%");
+            $usuarios->orWhere("ci", "LIKE", "%$search%");
+        }
+
+        $usuarios = $usuarios->paginate(5);
         return response()->JSON([
             "usuarios" => $usuarios
         ]);

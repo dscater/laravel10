@@ -1,20 +1,4 @@
-<script setup>
-import BreadBrums from "@/Components/BreadBrums.vue";
-import { useApp } from "@/composables/useApp";
-import { useUsuarios } from "@/composables/useUsuarios";
-import { useForm, usePage } from "@inertiajs/vue3";
-import { ref, onMounted, computed } from "vue";
-import { useMenu } from "@/composables/useMenu";
-const { mobile, identificaDispositivo } = useMenu();
-const { flash } = usePage().props;
-const { setLoading } = useApp();
-onMounted(() => {
-    identificaDispositivo();
-    console.log(mobile.value);
-    setTimeout(() => {
-        setLoading(false);
-    }, 300);
-});
+<script>
 const breadbrums = [
     {
         title: "Inicio",
@@ -25,18 +9,32 @@ const breadbrums = [
     {
         title: "Usuarios",
         disabled: false,
-        url: route("usuarios.index"),
-        name_url: "usuarios.index",
+        url: "",
+        name_url: "",
     },
 ];
+</script>
+<script setup>
+import BreadBrums from "@/Components/BreadBrums.vue";
+import { useApp } from "@/composables/useApp";
+import { useUsuarios } from "@/composables/usuarios/useUsuarios";
+import { ref, onMounted } from "vue";
+import { useMenu } from "@/composables/useMenu";
+import Formulario from "./Formulario.vue";
+const { mobile, identificaDispositivo } = useMenu();
+const { setLoading } = useApp();
+onMounted(() => {
+    identificaDispositivo();
+    setTimeout(() => {
+        setLoading(false);
+    }, 300);
+});
 
-const { getUsuariosPaginado } = useUsuarios();
-
-const datosUsuarios = ref([]);
+const { getUsuariosApi, setUsuario, limpiarUsuario, deleteUsuario } =
+    useUsuarios();
+const responseUsuarios = ref([]);
 const listUsuarios = ref([]);
-
 const itemsPerPage = ref(5);
-
 const headers = ref([
     {
         title: "Id",
@@ -50,120 +48,64 @@ const headers = ref([
     { title: "Dirección", key: "dir", align: "start" },
     { title: "Correo", key: "email", align: "start" },
     { title: "Teléfono/Celular", key: "fono", align: "start" },
-    { title: "Foto", key: "foto", align: "start" },
+    { title: "Foto", key: "foto", align: "start", sortable: false },
     { title: "Tipo", key: "tipo", align: "start" },
     { title: "Acceso", key: "acceso", align: "start" },
     { title: "Acción", key: "accion", align: "end", sortable: false },
 ]);
 
 const search = ref("");
-const loading = ref(true);
-const totalItems = ref(0);
-
-const loadItems = async ({ page, itemsPerPage, sortBy }) => {
-    datosUsuarios.value = await getUsuariosPaginado({
-        page,
-        itemsPerPage,
-        sortBy,
-    });
-    listUsuarios.value = datosUsuarios.value.data;
-    totalItems.value = parseInt(datosUsuarios.value.total);
-    loading.value = false;
-};
-
 const options = ref({
     page: 1,
     itemsPerPage: itemsPerPage,
-    sortBy: [],
+    sortBy: "",
+    sortOrder: "desc",
+    search: "",
 });
 
+const loading = ref(true);
+const totalItems = ref(0);
+let setTimeOutLoadData = null;
+const loadItems = async ({ page, itemsPerPage, sortBy }) => {
+    loading.value = true;
+    options.value.page = page;
+    if (sortBy.length > 0) {
+        options.value.sortBy = sortBy[0].key;
+        options.value.sortOrder = sortBy[0].order;
+    }
+    options.value.search = search.value;
+
+    clearInterval(setTimeOutLoadData);
+    setTimeOutLoadData = setTimeout(async () => {
+        responseUsuarios.value = await getUsuariosApi(options.value);
+        listUsuarios.value = responseUsuarios.value.data;
+        totalItems.value = parseInt(responseUsuarios.value.total);
+        loading.value = false;
+    }, 300);
+};
 const recargaUsuarios = async () => {
-    datosUsuarios.value = await getUsuariosPaginado(options.value);
-    listUsuarios.value = datosUsuarios.value.data;
-    totalItems.value = parseInt(datosUsuarios.value.total);
-    loading.value = false;
+    listUsuarios.value = [];
+    options.value.search = search.value;
+    responseUsuarios.value = await getUsuariosApi(options.value);
+    listUsuarios.value = responseUsuarios.value.data;
+    totalItems.value = parseInt(responseUsuarios.value.total);
+    setTimeout(() => {
+        loading.value = false;
+        open_dialog.value = false;
+    }, 300);
 };
-
-const dialog = ref(false);
-const accion = ref(0);
-
-let form = useForm({
-    id: 0,
-    nombre: "",
-    paterno: "",
-    materno: "",
-    ci: "",
-    ci_exp: "",
-    dir: "",
-    email: "",
-    fono: "",
-    tipo: "",
-    foto: "",
-    acceso: 0,
-});
-
-const abrirDialog = () => {
-    accion.value = 0;
-    dialog.value = true;
-    form = useForm({
-        id: 0,
-        nombre: "",
-        paterno: "",
-        materno: "",
-        ci: "",
-        ci_exp: "",
-        dir: "",
-        email: "",
-        fono: "",
-        tipo: "",
-        foto: "",
-        acceso: 0,
-    });
+const accion_dialog = ref(0);
+const open_dialog = ref(false);
+const agregarRegistro = () => {
+    limpiarUsuario();
+    accion_dialog.value = 0;
+    open_dialog.value = true;
 };
-
-const listTipos = ["ADMINISTRADOR", "AUXILIAR"];
-const listExpedido = [
-    { value: "LP", label: "La Paz" },
-    { value: "CB", label: "Cochabamba" },
-    { value: "SC", label: "Santa Cruz" },
-    { value: "CH", label: "Chuquisaca" },
-    { value: "OR", label: "Oruro" },
-    { value: "PT", label: "Potosi" },
-    { value: "TJ", label: "Tarija" },
-    { value: "PD", label: "Pando" },
-    { value: "BN", label: "Beni" },
-];
-
-const foto = ref(null);
-function cargaArchivo(e, key) {
-    form[key] = null;
-    form[key] = e.target.files[0];
-}
-
-const tituloDialog = computed(() => {
-    return accion.value == 0 ? "Agregar Usuario" : "Editar Usuario";
-});
-
 const editarUsuario = (item) => {
-    accion.value = 1;
-    form = useForm({
-        id: item.id,
-        nombre: item.nombre,
-        paterno: item.paterno,
-        materno: item.materno,
-        ci: item.ci,
-        ci_exp: item.ci_exp,
-        dir: item.dir,
-        email: item.email,
-        fono: item.fono,
-        tipo: item.tipo,
-        foto: item.foto,
-        acceso: item.acceso + "",
-        _method: "put",
-    });
-    dialog.value = true;
+    setUsuario(item);
+    accion_dialog.value = 1;
+    open_dialog.value = true;
 };
-
 const eliminarUsuario = (item) => {
     Swal.fire({
         title: "¿Quierés eliminar este registro?",
@@ -173,122 +115,16 @@ const eliminarUsuario = (item) => {
         confirmButtonText: "Si, eliminar",
         cancelButtonText: "No, cancelar",
         denyButtonText: `No, cancelar`,
-    }).then((result) => {
+    }).then(async (result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
-            axios
-                .post(route("usuarios.destroy", item.id), {
-                    _method: "DELETE",
-                })
-                .then((response) => {
-                    Swal.fire({
-                        icon: "success",
-                        title: response.data.message,
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
-                    recargaUsuarios();
-                })
-                .catch((error) => {
-                    if (error.response) {
-                        if (error.response.status === 422) {
-                            this.errors = error.response.data.errors;
-                        }
-                        if (
-                            error.response.status === 420 ||
-                            error.response.status === 419 ||
-                            error.response.status === 401
-                        ) {
-                            window.location = "/";
-                        }
-                        if (error.response.status === 500) {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Error",
-                                html: error.response.data.message,
-                                showConfirmButton: false,
-                                timer: 2000,
-                            });
-                        }
-                    }
-                });
+            let respuesta = await deleteUsuario(item.id);
+            if (respuesta && respuesta.sw) {
+                recargaUsuarios();
+            }
         }
     });
 };
-
-const enviarFormulario = () => {
-    if (form.id == 0) {
-        form.post(route("usuarios.store"), {
-            preserveScroll: true,
-            forceFormData: true,
-            onSuccess: () => {
-                form.clearErrors();
-                Swal.fire({
-                    icon: "success",
-                    title: "Correcto",
-                    text: `${flash.bien ? flash.bien : "Proceso realizado"}`,
-                    confirmButtonColor: "#3085d6",
-                    confirmButtonText: `Aceptar`,
-                });
-                dialog.value = false;
-                form.reset();
-                recargaUsuarios();
-            },
-            onError: (err) => {
-                Swal.fire({
-                    icon: "info",
-                    title: "Error",
-                    text: `${
-                        flash.error
-                            ? flash.error
-                            : err.error
-                            ? err.error
-                            : "Hay errores en el formulario"
-                    }`,
-                    confirmButtonColor: "#3085d6",
-                    confirmButtonText: `Aceptar`,
-                });
-            },
-        });
-    } else {
-        console.log("editar");
-        form.post(route("usuarios.update", form.id), {
-            preserveScroll: true,
-            forceFormData: true,
-            onSuccess: () => {
-                form.clearErrors();
-                Swal.fire({
-                    icon: "success",
-                    title: "Correcto",
-                    text: `${flash.bien ? flash.bien : "Proceso realizado"}`,
-                    confirmButtonColor: "#3085d6",
-                    confirmButtonText: `Aceptar`,
-                });
-                dialog.value = false;
-                form.reset();
-                recargaUsuarios();
-            },
-            onError: (err) => {
-                console.log(err);
-                Swal.fire({
-                    icon: "info",
-                    title: "Error",
-                    text: `${
-                        flash.error
-                            ? flash.error
-                            : err.error
-                            ? err.error
-                            : "Hay errores en el formulario"
-                    }`,
-                    confirmButtonColor: "#3085d6",
-                    confirmButtonText: `Aceptar`,
-                });
-            },
-        });
-    }
-};
-
-onMounted(() => {});
 </script>
 <template>
     <v-container>
@@ -298,7 +134,7 @@ onMounted(() => {});
                 <v-btn
                     color="blue"
                     prepend-icon="mdi-plus"
-                    @click="abrirDialog"
+                    @click="agregarRegistro"
                 >
                     Agregar</v-btn
                 >
@@ -316,6 +152,7 @@ onMounted(() => {});
                                     label="Buscar"
                                     append-inner-icon="mdi-magnify"
                                     variant="underlined"
+                                    clearable
                                     hide-details
                                 ></v-text-field>
                             </v-col>
@@ -332,6 +169,7 @@ onMounted(() => {});
                             :search="search"
                             @update:options="loadItems"
                             height="auto"
+                            no-data-text="No se encontrarón registros"
                             loading-text="Cargando..."
                             page-text="{0} - {1} de {2}"
                             items-per-page-text="Registros por página"
@@ -423,21 +261,88 @@ onMounted(() => {});
                                             </li>
                                             <li
                                                 class="flex-item"
+                                                data-label="Usuario"
+                                            >
+                                                {{ item.usuario }}
+                                            </li>
+                                            <li
+                                                class="flex-item"
                                                 data-label="Nombre"
                                             >
                                                 {{ item.full_name }}
                                             </li>
                                             <li
                                                 class="flex-item"
-                                                data-label="Tipo"
+                                                data-label="C.I:"
                                             >
-                                                {{ item.tipo }}
+                                                {{ item.full_ci }}
+                                            </li>
+                                            <li
+                                                class="flex-item"
+                                                data-label="Dirección"
+                                            >
+                                                {{ item.dir }}
+                                            </li>
+                                            <li
+                                                class="flex-item"
+                                                data-label="Correo"
+                                            >
+                                                {{ item.email }}
+                                            </li>
+                                            <li
+                                                class="flex-item"
+                                                data-label="Teléfono/Celular"
+                                            >
+                                                {{ item.fono }}
+                                            </li>
+                                            <li
+                                                class="flex-item"
+                                                data-label="Foto"
+                                            >
+                                                <v-avatar color="blue">
+                                                    <v-img
+                                                        v-if="item.url_foto"
+                                                        :src="item.url_foto"
+                                                        cover
+                                                        :lazy-src="
+                                                            item.url_foto
+                                                        "
+                                                    ></v-img>
+                                                    <span v-else>{{
+                                                        item.iniciales_nombre
+                                                    }}</span>
+                                                </v-avatar>
                                             </li>
                                             <li
                                                 class="flex-item"
                                                 data-label="Tipo"
                                             >
                                                 {{ item.tipo }}
+                                            </li>
+                                            <li
+                                                class="flex-item"
+                                                data-label="Acceso"
+                                            >
+                                                <v-chip
+                                                    :color="
+                                                        item.acceso == 1
+                                                            ? 'success'
+                                                            : 'error'
+                                                    "
+                                                    :prepend-icon="
+                                                        item.acceso == 1
+                                                            ? 'mdi-check'
+                                                            : 'mdi-lock'
+                                                    "
+                                                >
+                                                    <span
+                                                        v-text="
+                                                            item.acceso == 1
+                                                                ? 'Habilitado'
+                                                                : 'Denegado'
+                                                        "
+                                                    ></span>
+                                                </v-chip>
                                             </li>
                                         </ul>
                                         <v-row>
@@ -471,302 +376,11 @@ onMounted(() => {});
                 </v-card>
             </v-col>
         </v-row>
-        <v-row justify="center">
-            <v-dialog v-model="dialog" persistent width="1024" scrollable>
-                <v-card>
-                    <v-card-title class="border-b bg-blue">
-                        <span class="text-h5" v-html="tituloDialog"></span>
-                    </v-card-title>
-                    <v-card-text>
-                        <v-container>
-                            <form>
-                                <v-row>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-text-field
-                                            :class="
-                                                form.errors?.nombre
-                                                    ? 'mb-3'
-                                                    : ''
-                                            "
-                                            :error="
-                                                form.errors?.nombre
-                                                    ? true
-                                                    : false
-                                            "
-                                            :error-messages="
-                                                form.errors?.nombre
-                                                    ? form.errors?.nombre
-                                                    : ''
-                                            "
-                                            variant="outlined"
-                                            label="Nombre*"
-                                            required
-                                            v-model="form.nombre"
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-text-field
-                                            :class="
-                                                form.errors?.paterno
-                                                    ? 'mb-3'
-                                                    : ''
-                                            "
-                                            :error="
-                                                form.errors?.paterno
-                                                    ? true
-                                                    : false
-                                            "
-                                            :error-messages="
-                                                form.errors?.paterno
-                                                    ? form.errors?.paterno
-                                                    : ''
-                                            "
-                                            variant="outlined"
-                                            label="Apellido Paterno*"
-                                            v-model="form.paterno"
-                                            required
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-text-field
-                                            :class="
-                                                form.errors?.materno
-                                                    ? 'mb-3'
-                                                    : ''
-                                            "
-                                            :error="
-                                                form.errors?.materno
-                                                    ? true
-                                                    : false
-                                            "
-                                            :error-messages="
-                                                form.errors?.materno
-                                                    ? form.errors?.materno
-                                                    : ''
-                                            "
-                                            variant="outlined"
-                                            label="Apellido Materno"
-                                            v-model="form.materno"
-                                            required
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-text-field
-                                            :class="
-                                                form.errors?.ci ? 'mb-3' : ''
-                                            "
-                                            :error="
-                                                form.errors?.ci ? true : false
-                                            "
-                                            :error-messages="
-                                                form.errors?.ci
-                                                    ? form.errors?.ci
-                                                    : ''
-                                            "
-                                            variant="outlined"
-                                            label="C.I.*"
-                                            v-model="form.ci"
-                                            required
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-select
-                                            :class="
-                                                form.errors?.ci_exp
-                                                    ? 'mb-3'
-                                                    : ''
-                                            "
-                                            :error="
-                                                form.errors?.ci_exp
-                                                    ? true
-                                                    : false
-                                            "
-                                            :error-messages="
-                                                form.errors?.ci_exp
-                                                    ? form.errors?.ci_exp
-                                                    : ''
-                                            "
-                                            variant="outlined"
-                                            clearable
-                                            :items="listExpedido"
-                                            item-value="value"
-                                            item-title="label"
-                                            label="Expedido*"
-                                            v-model="form.ci_exp"
-                                            required
-                                        ></v-select>
-                                    </v-col>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-text-field
-                                            :class="
-                                                form.errors?.dir ? 'mb-3' : ''
-                                            "
-                                            :error="
-                                                form.errors?.dir ? true : false
-                                            "
-                                            :error-messages="
-                                                form.errors?.dir
-                                                    ? form.errors?.dir
-                                                    : ''
-                                            "
-                                            variant="outlined"
-                                            label="Dirección*"
-                                            v-model="form.dir"
-                                            required
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-text-field
-                                            :class="
-                                                form.errors?.correo
-                                                    ? 'mb-3'
-                                                    : ''
-                                            "
-                                            :error="
-                                                form.errors?.correo
-                                                    ? true
-                                                    : false
-                                            "
-                                            :error-messages="
-                                                form.errors?.correo
-                                                    ? form.errors?.correo
-                                                    : ''
-                                            "
-                                            variant="outlined"
-                                            label="Correo"
-                                            v-model="form.correo"
-                                            required
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-text-field
-                                            :class="
-                                                form.errors?.fono ? 'mb-3' : ''
-                                            "
-                                            :error="
-                                                form.errors?.fono ? true : false
-                                            "
-                                            :error-messages="
-                                                form.errors?.fono
-                                                    ? form.errors?.fono
-                                                    : ''
-                                            "
-                                            variant="outlined"
-                                            label="Teléfono/Celular"
-                                            v-model="form.fono"
-                                            required
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-select
-                                            :class="
-                                                form.errors?.tipo ? 'mb-3' : ''
-                                            "
-                                            :error="
-                                                form.errors?.tipo ? true : false
-                                            "
-                                            :error-messages="
-                                                form.errors?.tipo
-                                                    ? form.errors?.tipo
-                                                    : ''
-                                            "
-                                            variant="outlined"
-                                            clearable
-                                            :items="listTipos"
-                                            label="Tipo de Usuario*"
-                                            v-model="form.tipo"
-                                            required
-                                        ></v-select>
-                                    </v-col>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-file-input
-                                            :class="
-                                                form.errors?.foto ? 'mb-3' : ''
-                                            "
-                                            :error="
-                                                form.errors?.foto ? true : false
-                                            "
-                                            :error-messages="
-                                                form.errors?.foto
-                                                    ? form.errors?.foto
-                                                    : ''
-                                            "
-                                            density="compact"
-                                            variant="outlined"
-                                            accept="image/png, image/jpeg, image/bmp"
-                                            placeholder="Foto"
-                                            prepend-icon="mdi-camera"
-                                            label="Foto"
-                                            @change="
-                                                cargaArchivo($event, 'foto')
-                                            "
-                                            ref="foto"
-                                        ></v-file-input>
-                                    </v-col>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-row>
-                                            <v-col cols="3"
-                                                ><span class="text-caption d-block pt-4">
-                                                    Acceso
-                                                </span></v-col
-                                            >
-                                            <v-col cols="9">
-                                                <v-switch
-                                                    color="success"
-                                                    true-value="1"
-                                                    false-value="0"
-                                                    v-model="form.acceso"
-                                                >
-                                                    <template v-slot:label>
-                                                        <v-chip
-                                                            :color="
-                                                                form.acceso == 1
-                                                                    ? 'success'
-                                                                    : 'error'
-                                                            "
-                                                            :prepend-icon="
-                                                                form.acceso == 1
-                                                                    ? 'mdi-check'
-                                                                    : 'mdi-lock'
-                                                            "
-                                                        >
-                                                            <span
-                                                                v-text="
-                                                                    form.acceso ==
-                                                                    1
-                                                                        ? 'Habilitado'
-                                                                        : 'Denegado'
-                                                                "
-                                                            ></span>
-                                                        </v-chip>
-                                                    </template>
-                                                </v-switch>
-                                            </v-col>
-                                        </v-row>
-                                    </v-col>
-                                </v-row>
-                            </form>
-                        </v-container>
-                    </v-card-text>
-                    <v-card-actions class="border-t">
-                        <v-spacer></v-spacer>
-                        <v-btn
-                            color="blue-darken-1"
-                            variant="text"
-                            @click="dialog = false"
-                        >
-                            Cancelar
-                        </v-btn>
-                        <v-btn
-                            class="bg-blue"
-                            prepend-icon="mdi-content-save"
-                            @click="enviarFormulario"
-                        >
-                            Guardar
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
-        </v-row>
+        <Formulario
+            :open_dialog="open_dialog"
+            :accion_dialog="accion_dialog"
+            @envio-formulario="recargaUsuarios"
+            @cerrar-dialog="open_dialog = false"
+        ></Formulario>
     </v-container>
 </template>

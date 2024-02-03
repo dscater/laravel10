@@ -1,17 +1,4 @@
-<script setup>
-// componentes
-import BreadBrums from "@/Components/BreadBrums.vue";
-import { ref, onMounted, reactive } from "vue";
-import { useForm } from "@inertiajs/vue3";
-import { useInstitucion } from "@/composables/useInstitucion";
-import { useApp } from "@/composables/useApp";
-const { setLoading } = useApp();
-onMounted(() => {
-    setTimeout(() => {
-        setLoading(false);
-    }, 300);
-});
-
+<script>
 const breadbrums = [
     {
         title: "Inicio",
@@ -26,7 +13,20 @@ const breadbrums = [
         name_url: "institucions.index",
     },
 ];
-
+</script>
+<script setup>
+// componentes
+import BreadBrums from "@/Components/BreadBrums.vue";
+import { ref, onMounted, reactive } from "vue";
+import { useForm } from "@inertiajs/vue3";
+import { useInstitucion } from "@/composables/institucion/useInstitucion";
+import { useApp } from "@/composables/useApp";
+const { setLoading } = useApp();
+onMounted(() => {
+    setTimeout(() => {
+        setLoading(false);
+    }, 300);
+});
 const props = defineProps({
     institucion: {
         type: Object,
@@ -164,7 +164,11 @@ function limpiaRefs() {
                                             >
                                                 <v-row>
                                                     <v-col cols="12">
-                                                        <h4 class="text-center text-h6">INFORMACIÓN</h4>
+                                                        <h4
+                                                            class="text-center text-h6"
+                                                        >
+                                                            INFORMACIÓN
+                                                        </h4>
                                                     </v-col>
                                                     <v-col
                                                         cols="6"
