@@ -8,7 +8,7 @@ export default {
 
 <script setup>
 import { useInstitucion } from "@/composables/institucion/useInstitucion";
-import { useForm } from "@inertiajs/vue3";
+import { useForm, Head } from "@inertiajs/vue3";
 import { ref } from "vue";
 
 const { oInstitucion } = useInstitucion();
@@ -44,6 +44,7 @@ onMounted(() => {
 </script>
 
 <template>
+    <Head title="Login" />
     <v-container class="ma-0">
         <v-row align="center" justify="center">
             <v-col cols="12" sm="8" md="6" xl="6">
