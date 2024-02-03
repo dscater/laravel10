@@ -84,6 +84,7 @@ const loadItems = async ({ page, itemsPerPage, sortBy }) => {
     }, 300);
 };
 const recargaUsuarios = async () => {
+    loading.value = true;
     listUsuarios.value = [];
     options.value.search = search.value;
     responseUsuarios.value = await getUsuariosApi(options.value);
