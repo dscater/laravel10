@@ -49,6 +49,11 @@ Route::middleware('auth')->group(function () {
         return Inertia::render('Home');
     })->name('inicio');
 
+    // INSTITUCION
+    Route::resource("institucions", InstitucionController::class)->only(
+        ["index", "show", "update"]
+    );
+
     // USUARIO
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -60,18 +65,15 @@ Route::middleware('auth')->group(function () {
     Route::get("/menu_user", [UserController::class, 'permisos']);
 
     // USUARIOS
+    Route::put("/usuarios/password/{user}", [UsuarioController::class, 'actualizaPassword'])->name("usuarios.password");
     Route::get("/usuarios/paginado", [UsuarioController::class, 'paginado'])->name("usuarios.paginado");
     Route::get("/usuarios/listado", [UsuarioController::class, 'listado'])->name("usuarios.listado");
+    Route::get("/usuarios/listado/byTipo", [UsuarioController::class, 'byTipo'])->name("usuarios.byTipo");
     Route::get("/usuarios/show/{user}", [UsuarioController::class, 'show'])->name("usuarios.show");
     Route::put("/usuarios/update/{user}", [UsuarioController::class, 'update'])->name("usuarios.update");
     Route::delete("/usuarios/{user}", [UsuarioController::class, 'destroy'])->name("usuarios.destroy");
     Route::resource("usuarios", UsuarioController::class)->only(
         ["index", "store"]
-    );
-
-    // INSTITUCION
-    Route::resource("institucions", InstitucionController::class)->only(
-        ["index", "show", "update"]
     );
 });
 

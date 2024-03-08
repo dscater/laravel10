@@ -17,10 +17,12 @@ const breadbrums = [
 <script setup>
 import BreadBrums from "@/Components/BreadBrums.vue";
 import { useApp } from "@/composables/useApp";
+import { Head } from "@inertiajs/vue3";
 import { useUsuarios } from "@/composables/usuarios/useUsuarios";
 import { ref, onMounted } from "vue";
 import { useMenu } from "@/composables/useMenu";
 import Formulario from "./Formulario.vue";
+import FormPassword from "./FormPassword.vue";
 const { mobile, identificaDispositivo } = useMenu();
 const { setLoading } = useApp();
 onMounted(() => {
@@ -39,18 +41,18 @@ const headers = ref([
     {
         title: "Id",
         align: "start",
-        sortable: true,
         key: "id",
+        sortable: false,
     },
-    { title: "Usuario", key: "usuario", align: "start" },
-    { title: "Nombre", key: "full_name", align: "start" },
-    { title: "C.I.", key: "full_ci", align: "start" },
-    { title: "Dirección", key: "dir", align: "start" },
-    { title: "Correo", key: "email", align: "start" },
-    { title: "Teléfono/Celular", key: "fono", align: "start" },
+    { title: "Usuario", key: "usuario", align: "start", sortable: false },
+    { title: "Nombre", key: "full_name", align: "start", sortable: false },
+    { title: "C.I.", key: "full_ci", align: "start", sortable: false },
+    { title: "Dirección", key: "dir", align: "start", sortable: false },
+    { title: "Correo", key: "email", align: "start", sortable: false },
+    { title: "Teléfono/Celular", key: "fono", align: "start", sortable: false },
     { title: "Foto", key: "foto", align: "start", sortable: false },
-    { title: "Tipo", key: "tipo", align: "start" },
-    { title: "Acceso", key: "acceso", align: "start" },
+    { title: "Tipo", key: "tipo", align: "start", sortable: false },
+    { title: "Acceso", key: "acceso", align: "start", sortable: false },
     { title: "Acción", key: "accion", align: "end", sortable: false },
 ]);
 
@@ -97,6 +99,9 @@ const recargaUsuarios = async () => {
 };
 const accion_dialog = ref(0);
 const open_dialog = ref(false);
+const accion_dialog_pass = ref(0);
+const open_dialog_pass = ref(false);
+
 const agregarRegistro = () => {
     limpiarUsuario();
     accion_dialog.value = 0;
@@ -106,6 +111,11 @@ const editarUsuario = (item) => {
     setUsuario(item);
     accion_dialog.value = 1;
     open_dialog.value = true;
+};
+const updatePassword = (item) => {
+    setUsuario(item);
+    accion_dialog_pass.value = 1;
+    open_dialog_pass.value = true;
 };
 const eliminarUsuario = (item) => {
     Swal.fire({
@@ -128,6 +138,7 @@ const eliminarUsuario = (item) => {
 };
 </script>
 <template>
+    <Head title="Usuarios"></Head>
     <v-container>
         <BreadBrums :breadbrums="breadbrums"></BreadBrums>
         <v-row class="mt-0">
@@ -145,7 +156,9 @@ const eliminarUsuario = (item) => {
             <v-col cols="12">
                 <v-card flat>
                     <v-card-title>
-                        <v-row class="bg-blue d-flex align-center pa-3">
+                        <v-row
+                            class="bg-blue d-flex align-center pa-3"
+                        >
                             <v-col cols="12" sm="6" md="4"> Usuarios </v-col>
                             <v-col cols="12" sm="6" md="4" offset-md="4">
                                 <v-text-field
@@ -235,6 +248,13 @@ const eliminarUsuario = (item) => {
                                         </v-chip>
                                     </td>
                                     <td class="text-right">
+                                        <v-btn
+                                            color="blue"
+                                            size="small"
+                                            class="pa-1 ma-1"
+                                            @click="updatePassword(item)"
+                                            icon="mdi-key-variant"
+                                        ></v-btn>
                                         <v-btn
                                             color="yellow"
                                             size="small"
@@ -352,6 +372,15 @@ const eliminarUsuario = (item) => {
                                                 class="text-center pa-5"
                                             >
                                                 <v-btn
+                                                    color="blue"
+                                                    size="small"
+                                                    class="pa-1 ma-1"
+                                                    @click="
+                                                        updatePassword(item)
+                                                    "
+                                                    icon="mdi-key-variant"
+                                                ></v-btn>
+                                                <v-btn
                                                     color="yellow"
                                                     size="small"
                                                     class="pa-1 ma-1"
@@ -383,5 +412,11 @@ const eliminarUsuario = (item) => {
             @envio-formulario="recargaUsuarios"
             @cerrar-dialog="open_dialog = false"
         ></Formulario>
+        <FormPassword
+            :open_dialog="open_dialog_pass"
+            :accion_dialog="accion_dialog_pass"
+            @envio-formulario="open_dialog_pass = false"
+            @cerrar-dialog="open_dialog_pass = false"
+        ></FormPassword>
     </v-container>
 </template>

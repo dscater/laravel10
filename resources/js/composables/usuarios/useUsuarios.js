@@ -1,4 +1,3 @@
-import { useForm } from "@inertiajs/vue3";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import { usePage } from "@inertiajs/vue3";
@@ -43,6 +42,23 @@ export const useUsuarios = () => {
             });
             console.error("Error:", err);
             throw err; // Puedes manejar el error según tus necesidades
+        }
+    };
+
+    const getUsuariosByTipo = async (tipo, sin_area = false, id = null) => {
+        try {
+            const response = await axios.get(route("usuarios.byTipo"), {
+                headers: { Accept: "application/json" },
+                params: {
+                    tipo,
+                    sin_area,
+                    id,
+                },
+            });
+            return response.data.usuarios;
+        } catch (error) {
+            console.error("Error:", error);
+            throw error; // Puedes manejar el error según tus necesidades
         }
     };
 
@@ -180,5 +196,6 @@ export const useUsuarios = () => {
         deleteUsuario,
         setUsuario,
         limpiarUsuario,
+        getUsuariosByTipo,
     };
 };

@@ -35,7 +35,7 @@ watch(
 
 const { flash } = usePage().props;
 
-const listTipos = ["ADMINISTRADOR", "AUXILIAR"];
+const listTipos = ["ADMINISTRADOR", "JEFE DE ÁREA","TÉCNICO"];
 const listExpedido = [
     { value: "LP", label: "La Paz" },
     { value: "CB", label: "Cochabamba" },
@@ -380,7 +380,7 @@ const cerrarDialog = () => {
                 <v-card-actions class="border-t">
                     <v-spacer></v-spacer>
                     <v-btn
-                        color="blue-darken-1"
+                        color="grey-darken-4"
                         variant="text"
                         @click="cerrarDialog"
                     >
